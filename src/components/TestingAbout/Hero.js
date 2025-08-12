@@ -26,6 +26,7 @@ export default function Hero() {
     three: false,
     vanta: false,
   });
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   // Form state management
   const [showForm, setShowForm] = useState(false);
@@ -45,6 +46,17 @@ export default function Hero() {
     else newSize = "xl";
 
     setScreenSize((prev) => (prev !== newSize ? newSize : prev));
+  }, []);
+
+  // Detect user motion preference
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(!!mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => {
+      mq.removeEventListener?.("change", update);
+    };
   }, []);
 
   // Enhanced Vanta configuration based on screen size
@@ -145,6 +157,10 @@ export default function Hero() {
     let loadTimeout;
 
     const initializeVanta = async () => {
+      if (reducedMotion) {
+        setVantaLoaded(true);
+        return;
+      }
       const isMobile = ["mobile", "sm"].includes(screenSize);
 
       if (isMobile && window.navigator?.connection?.effectiveType === "2g") {
@@ -215,7 +231,7 @@ export default function Hero() {
         vantaEffect.current = null;
       }
     };
-  }, [vantaConfig, loadScript]);
+  }, [vantaConfig, loadScript, reducedMotion]);
 
   // Dynamic icon cloud props based on screen size - SIGNIFICANTLY INCREASED MOBILE SIZES
   const getIconCloudProps = useMemo(() => {
@@ -274,13 +290,14 @@ export default function Hero() {
       ...props[screenSize],
       bgColor: "transparent",
       glowEffect: true,
+      autoRotate: !reducedMotion,
       // Additional props for better visibility
       iconOpacity: 0.9,
       cloudRadius: props[screenSize].radius || 180,
       minDistance: 50,
       maxDistance: props[screenSize].radius || 180,
     };
-  }, [screenSize]);
+  }, [screenSize, reducedMotion]);
 
   return (
     <div className="relative overflow-hidden bg-[#1a1f36] min-h-screen">
