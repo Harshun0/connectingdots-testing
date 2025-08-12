@@ -30,7 +30,7 @@ const TrustUs = () => {
  
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8"
+      className="min-h-* bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8"
       style={{
         backgroundImage: `url('https://res.cloudinary.com/dujw4np0d/image/upload/v1751885009/.bg_tpqc0t.jpg')`,
         backgroundSize: 'cover',
@@ -66,12 +66,22 @@ const TrustUs = () => {
           0% { transform: translateX(0); }
           100% { transform: translateX(-40px); }
         }
+        /* TrustUs heading font sizes aligned with Why.module.css */
+        .trustusTitle {
+          font-size: 2.5rem; /* ~40px */
+        }
+        @media (max-width: 1200px) {
+          .trustusTitle { font-size: 2.2rem; /* ~35.2px */ }
+        }
+        @media (max-width: 768px) {
+          .trustusTitle { font-size: 1.8rem; /* ~28.8px */ }
+        }
       `}</style>
      
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-4 sm:mb-6">
-          <h1 className="mx-4 sm:mx-6 md:mx-8 text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 tracking-wider" style={{
+          <h1 className="mx-4 sm:mx-6 md:mx-8 trustusTitle font-bold mb-1 sm:mb-2 tracking-wider" style={{
             background: 'linear-gradient(90deg, rgba(1, 1, 98, 1) 35%, rgb(3, 111, 133) 49%, rgba(2, 2, 85, 1) 62%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -111,14 +121,13 @@ const TrustUs = () => {
           </div>
           {/* Right Content - Logo Marquee */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-2xl"></div>
-            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-white/20">
+            <div className="relative bg-white rounded-2xl p-6 shadow-2xl border border-white/20">
               <div className="text-center mb-6">
                
                 <h3 className="text-xl font-bold text-gray-900">Our Success Stories</h3>
               </div>
              
-              <div className="flex justify-between gap-4 h-80 overflow-hidden">
+              <div className="flex justify-between gap-4 h-56 sm:h-64 md:h-80 overflow-hidden">
                 {logoColumns.map((logos, idx) => (
                   <div
                     key={idx}
@@ -144,10 +153,7 @@ const TrustUs = () => {
                         </div>
                       ))}
                     </div>
-                   
-                    {/* Gradient overlays */}
-                    <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-white/80 to-transparent pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/80 to-transparent pointer-events-none"></div>
+                    
                   </div>
                 ))}
               </div>
