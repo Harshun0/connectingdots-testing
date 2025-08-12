@@ -15,7 +15,7 @@ const TrustUs = () => {
     "moneytap.avif", "monginis.avif", "NA.avif"
   ];
  
-  const logoPaths = logoFilenames.map((name) => `/ourclientslogo/${name}`);
+  const logoPaths = logoFilenames.map((name) => `/OurClientsLogo/${name}`);
  
   const splitLogos = (logos) => {
     const third = Math.ceil(logos.length / 3);
