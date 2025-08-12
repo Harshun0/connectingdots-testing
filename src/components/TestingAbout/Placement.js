@@ -1,109 +1,112 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import BackgroundAnimation from "@/components/Common/BackgroundAnimation";
+
+// Hoisted static modules to avoid re-creation on every render
+const MODULES_DATA = [
+  {
+    id: "fico",
+    name: "SAP FICO",
+    description: "Financial Accounting & Controlling",
+    percentage: 98,
+    color: "#1E40AF",
+    angle: 0,
+    icon: "💰",
+    details:
+      "Master financial processes, reporting, and compliance with industry-leading placement rates",
+    slug: "sap-fico-course-in-pune",
+  },
+  {
+    id: "mm",
+    name: "SAP MM",
+    description: "Materials Management",
+    percentage: 95,
+    color: "#2563EB",
+    angle: 45,
+    icon: "📦",
+    details:
+      "Optimize procurement, inventory, and supply chain operations with proven success",
+    slug: "sap-mm-course-in-pune",
+  },
+  {
+    id: "sd",
+    name: "SAP SD",
+    description: "Sales & Distribution",
+    percentage: 93,
+    color: "#3B82F6",
+    angle: 90,
+    icon: "🚚",
+    details:
+      "Streamline sales processes and customer management for career advancement",
+    slug: "sap-sd-course-in-pune",
+  },
+  {
+    id: "abap",
+    name: "SAP ABAP",
+    description: "Development & Programming",
+    percentage: 90,
+    color: "#60A5FA",
+    angle: 135,
+    icon: "⚡",
+    details:
+      "Build custom solutions and enhance SAP functionality with cutting-edge skills",
+    slug: "sap-abap-course-in-pune",
+  },
+  {
+    id: "hcm",
+    name: "SAP HCM",
+    description: "Human Capital Management",
+    percentage: 88,
+    color: "#93C5FD",
+    angle: 180,
+    icon: "👥",
+    details:
+      "Manage workforce, payroll, and talent development with comprehensive training",
+    slug: "sap-hr-hcm-course-in-pune",
+  },
+  {
+    id: "basis",
+    name: "SAP Basis",
+    description: "System Administration",
+    percentage: 85,
+    color: "#60A5FA",
+    angle: 225,
+    icon: "🔧",
+    details:
+      "Maintain system performance and security with expert-level knowledge",
+    slug: "sap-basis-course-in-pune",
+  },
+  {
+    id: "hana",
+    name: "SAP S/4 HANA",
+    description: "Next-Gen ERP Suite",
+    percentage: 92,
+    color: "#1D4ED8",
+    angle: 270,
+    icon: "🚀",
+    details:
+      "Lead digital transformation with in-memory computing and next-gen capabilities",
+    slug: "sap-hana-course-in-pune",
+  },
+  {
+    id: "pp",
+    name: "SAP PP",
+    description: "Production Planning",
+    percentage: 87,
+    color: "#3B82F6",
+    angle: 315,
+    icon: "🏭",
+    details:
+      "Optimize manufacturing and production workflows with industry best practices",
+    slug: "sap-pp-course-in-pune",
+  },
+];
 
 const SAPCompassDial = () => {
   const [activeModule, setActiveModule] = useState(null);
   const [rotation, setRotation] = useState(0);
-
-  const modules = [
-    {
-      id: "fico",
-      name: "SAP FICO",
-      description: "Financial Accounting & Controlling",
-      percentage: 98,
-      color: "#1E40AF",
-      angle: 0,
-      icon: "💰",
-      details:
-        "Master financial processes, reporting, and compliance with industry-leading placement rates",
-      slug: "sap-fico-course-in-pune",
-    },
-    {
-      id: "mm",
-      name: "SAP MM",
-      description: "Materials Management",
-      percentage: 95,
-      color: "#2563EB",
-      angle: 45,
-      icon: "📦",
-      details:
-        "Optimize procurement, inventory, and supply chain operations with proven success",
-      slug: "sap-mm-course-in-pune",
-    },
-    {
-      id: "sd",
-      name: "SAP SD",
-      description: "Sales & Distribution",
-      percentage: 93,
-      color: "#3B82F6",
-      angle: 90,
-      icon: "🚚",
-      details:
-        "Streamline sales processes and customer management for career advancement",
-      slug: "sap-sd-course-in-pune",
-    },
-    {
-      id: "abap",
-      name: "SAP ABAP",
-      description: "Development & Programming",
-      percentage: 90,
-      color: "#60A5FA",
-      angle: 135,
-      icon: "⚡",
-      details:
-        "Build custom solutions and enhance SAP functionality with cutting-edge skills",
-      slug: "sap-abap-course-in-pune",
-    },
-    {
-      id: "hcm",
-      name: "SAP HCM",
-      description: "Human Capital Management",
-      percentage: 88,
-      color: "#93C5FD",
-      angle: 180,
-      icon: "👥",
-      details:
-        "Manage workforce, payroll, and talent development with comprehensive training",
-      slug: "sap-hr-hcm-course-in-pune",
-    },
-    {
-      id: "basis",
-      name: "SAP Basis",
-      description: "System Administration",
-      percentage: 85,
-      color: "#60A5FA",
-      angle: 225,
-      icon: "🔧",
-      details:
-        "Maintain system performance and security with expert-level knowledge",
-      slug: "sap-basis-course-in-pune",
-    },
-    {
-      id: "hana",
-      name: "SAP S/4 HANA",
-      description: "Next-Gen ERP Suite",
-      percentage: 92,
-      color: "#1D4ED8",
-      angle: 270,
-      icon: "🚀",
-      details:
-        "Lead digital transformation with in-memory computing and next-gen capabilities",
-      slug: "sap-hana-course-in-pune",
-    },
-    {
-      id: "pp",
-      name: "SAP PP",
-      description: "Production Planning",
-      percentage: 87,
-      color: "#3B82F6",
-      angle: 315,
-      icon: "🏭",
-      details:
-        "Optimize manufacturing and production workflows with industry best practices",
-      slug: "sap-pp-course-in-pune",
-    },
-  ];
+  const modules = useMemo(() => MODULES_DATA, []);
 
   // Auto-rotate functionality - always on
   useEffect(() => {
@@ -261,7 +264,8 @@ const SAPCompassDial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-8">
+    <div className="min-h-screen text-white p-4 md:p-8 relative overflow-hidden">
+      <BackgroundAnimation />
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-grey-400 to-blue-800 bg-clip-text text-transparent">
@@ -613,7 +617,7 @@ const SAPCompassDial = () => {
       <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
         <div className="text-center bg-gray-900 rounded-2xl p-4 md:p-6 border border-gray-700">
           <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2 font-mono">
-            2500+
+            5000+
           </div>
           <div className="text-gray-300 uppercase tracking-wide text-xs md:text-sm">
             Students Guided
@@ -629,7 +633,7 @@ const SAPCompassDial = () => {
         </div>
         <div className="text-center bg-gray-900 rounded-2xl p-4 md:p-6 border border-gray-700">
           <div className="text-3xl md:text-4xl font-bold text-purple-400 mb-2 font-mono">
-            100+
+            200+
           </div>
           <div className="text-gray-300 uppercase tracking-wide text-xs md:text-sm">
             Partner Companies
