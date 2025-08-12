@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { MapPin, Building2, Phone, Mail, Navigation } from "lucide-react";
+import BackgroundAnimation from "@/components/Common/BackgroundAnimation";
 
 // Company locations data
 const companyLocations = [
@@ -59,6 +60,7 @@ const InteractiveMap = ({
   const markersRef = useRef([]);
   const [isLoading, setIsLoading] = useState(true);
   const [leafletLoaded, setLeafletLoaded] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   // Default map center and zoom for India - responsive zoom levels
   const defaultCenter = [20.5937, 78.9629];
@@ -70,6 +72,12 @@ const InteractiveMap = ({
   const [defaultZoom, setDefaultZoom] = useState(5);
 
   useEffect(() => {
+    // Respect user motion preference
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateReduced = () => setReducedMotion(!!mq.matches);
+    updateReduced();
+    mq.addEventListener?.("change", updateReduced);
+
     const loadLeaflet = () => {
       if (window.L) {
         setLeafletLoaded(true);
@@ -85,6 +93,8 @@ const InteractiveMap = ({
       const script = document.createElement("script");
       script.src =
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+      script.async = true;
+      script.defer = true;
       script.onload = () => {
         setLeafletLoaded(true);
       };
@@ -97,11 +107,12 @@ const InteractiveMap = ({
     };
 
     setDefaultZoom(getDefaultZoom());
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     loadLeaflet();
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      mq.removeEventListener?.("change", updateReduced);
     };
   }, []);
 
@@ -159,29 +170,26 @@ const InteractiveMap = ({
 
       if ((centerOffset || zoomOffset) && noActiveLocation) {
         map.current.flyTo(defaultCenter, defaultZoom, {
-          animate: true,
-          duration: 1.5,
+          animate: !reducedMotion,
+          duration: reducedMotion ? 0 : 1.2,
         });
       }
 
       onMapLeave(); // reset selected & hover
     };
 
-    mapContainer.current.addEventListener("mouseleave", handleMouseLeave);
+    mapContainer.current.addEventListener("mouseleave", handleMouseLeave, { passive: true });
 
     return () => {
       if (mapContainer.current) {
-        mapContainer.current.removeEventListener(
-          "mouseleave",
-          handleMouseLeave
-        );
+        mapContainer.current.removeEventListener("mouseleave", handleMouseLeave);
       }
       if (map.current) {
         map.current.remove();
         map.current = null;
       }
     };
-  }, [leafletLoaded, defaultZoom, onMapLeave]);
+  }, [leafletLoaded, defaultZoom, onMapLeave, reducedMotion]);
 
   // Handle location selection and hovering
   useEffect(() => {
@@ -191,20 +199,20 @@ const InteractiveMap = ({
       if (hoveredLocation) {
         // Zoom to hovered location
         map.current.flyTo(hoveredLocation.coordinates, 14, {
-          animate: true,
-          duration: 1.5,
+          animate: !reducedMotion,
+          duration: reducedMotion ? 0 : 1.2,
         });
       } else if (selectedLocation) {
         // Stay at selected location when not hovering
         map.current.flyTo(selectedLocation.coordinates, 14, {
-          animate: true,
-          duration: 1.5,
+          animate: !reducedMotion,
+          duration: reducedMotion ? 0 : 1.2,
         });
       } else {
         // Return to default view when no location is selected or hovered
         map.current.flyTo(defaultCenter, defaultZoom, {
-          animate: true,
-          duration: 1.5,
+          animate: !reducedMotion,
+          duration: reducedMotion ? 0 : 1.2,
         });
       }
     } catch (error) {
@@ -216,6 +224,7 @@ const InteractiveMap = ({
     defaultCenter,
     defaultZoom,
     leafletLoaded,
+    reducedMotion,
   ]);
 
   const addMarker = (location, L) => {
@@ -539,13 +548,12 @@ const OurBranch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gray-800/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gray-700/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-600/10 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Animation */}
+      <BackgroundAnimation />
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/70" />
 
       <div className="relative z-10 container mx-auto px-4 py-6 sm:py-8 lg:py-12">
         {/* Header */}
